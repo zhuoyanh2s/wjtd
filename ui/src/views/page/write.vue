@@ -1,0 +1,181 @@
+<template>
+  <div class="container">
+    <el-card>
+      <el-form :model="state.ruleForm" label-width="100px" :rules="state.rules" ref="myRefForm">
+        <el-row :gutter="35">
+          <el-col class="mb20">
+            <el-form-item label="标题" prop="title">
+              <el-input v-model="state.ruleForm.title" placeholder="请输入页面标题" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="mb20">
+            <el-form-item label="访问路径" prop="path">
+              <el-input v-model="state.ruleForm.path" placeholder="请输入页面访问路径" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <!-- 页面详情（CKEditor 4） -->
+          <el-col class="mb20">
+            <el-form-item label="页面详情" prop="contentHtml">
+              <CKEditor
+                  ref="ckEditorRef"
+                  v-model="state.ruleForm.contentHtml"
+                  height="600px"
+                  @change="handleContentChange"
+              ></CKEditor>
+            </el-form-item>
+          </el-col>
+          <el-col class="mb20">
+            <el-form-item label="缩略图" prop="thumbnail">
+              <el-image
+                  style="width: 100px; height: 100px"
+                  :src="state.ruleForm.thumbnail"
+                  :fit="state.fit"></el-image>
+            </el-form-item>
+            <el-form-item>
+              <el-link type="primary" @click="onAttachDialogOpen">选择图片</el-link>
+            </el-form-item>
+          </el-col>
+          <el-col class="mb20">
+            <el-form-item label="页面摘要" prop="summary">
+              <el-input v-model="state.ruleForm.summary" type="textarea" :rows="2" placeholder="请输入文章摘要" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="SEO关键词" prop="seoKeywords">
+              <el-input type="textarea" :rows="2" v-model="state.ruleForm.seoKeywords" placeholder="请输入seo关键词" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="SEO描述" prop="seoDescription">
+              <el-input type="textarea" :rows="2" v-model="state.ruleForm.seoDescription" placeholder="请输入SEO描述" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="模板" prop="suffix">
+              <el-input v-model="state.ruleForm.suffix" placeholder="请输入页面模板后缀" clearable></el-input>
+              <div class="sub-title">结合网站模板使用，不正确填写，访问页面会出现404</div>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="允许评论" prop="commentEnable">
+              <el-switch
+                  v-model="state.ruleForm.commentEnable"
+                  active-color="#13ce66">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col class="mb20">
+            <el-form-item label="状态" prop="status">
+              <el-select v-model="state.ruleForm.status" placeholder="请选择状态" clearable class="w100">
+                <el-option label="发布" value="publish"></el-option>
+                <el-option label="草稿" value="draft"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保 存</el-button>
+          </el-form-item>
+        </el-row>
+      </el-form>
+    </el-card>
+    <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach" :fileType="state.fileType"/>
+  </div>
+</template>
+
+<script lang="ts" setup name="pageWrite">
+import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
+import { useRoute } from 'vue-router';
+import AttachDialog from '/@/components/attach/index.vue';
+import { PageApi } from '/@/api/page/index';
+import qs from 'qs';
+// 引入本地版CKEditor 4组件
+import CKEditor from "/@/components/ckeditor4/index.vue";
+
+const pageApi = PageApi();
+const attachDialogRef = ref();
+const ckEditorRef = ref(); // 新增：CKEditor ref
+const route = useRoute();
+const { proxy } = getCurrentInstance() as any;
+const state = reactive({
+  fileType: "image",
+  fit: "fill",
+  params: {},
+  ruleForm: {
+    title: '',
+    path: '',
+    commentEnable: 1,
+    contentHtml: '',
+    status: 'publish'
+  },
+  rules: {
+    "title": { required: true, message: '请输入页面标题', trigger: 'blur' },
+    "path": { required: true, message: '请输入页面访问路径', trigger: 'blur' },
+    "contentHtml": { required: true, message: '请输入页面详情', trigger: 'blur' },
+    "seoKeywords": { required: true, message: '请输入SEO关键词', trigger: 'blur' },
+    "seoDescription": { required: true, message: '请输入SEO描述', trigger: 'blur' },
+    "status": { required: true, message: '请选择发布状态', trigger: 'blur' },
+  },
+});
+
+// 编辑器内容变化回调
+const handleContentChange = (content: string) => {
+  state.ruleForm.contentHtml = content;
+};
+
+const onSubmit = () => {
+  // 强制同步并获取最新内容（终极兜底）
+  if (ckEditorRef.value) {
+    ckEditorRef.value.syncSourceContent?.(); // 调用子组件同步方法
+    state.ruleForm.contentHtml = ckEditorRef.value.getContent();
+  }
+
+  proxy.$refs['myRefForm'].validate((valid: any) => {
+    if (valid) {
+      let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
+      console.log('提交参数：', params); // 验证内容是否正确
+      pageApi.addPage(params).then((res) => {
+        state.ruleForm.id = res.data;
+        ElMessage.success("保存成功");
+      }).catch((res) => {
+        ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
+      })
+    }
+  });
+};
+
+const getPageInfo = (id: string) => {
+  pageApi.getPage(id).then((res) => {
+    state.ruleForm = res.data;
+  })
+}
+
+//打开附件弹出框
+const onAttachDialogOpen = () => {
+  attachDialogRef.value.openDialog(1);
+};
+
+//获取弹出框选中的附件
+const getSelectAttach = (value) => {
+  state.ruleForm.thumbnail = value[0].path;
+};
+
+onMounted(() => {
+  state.params = route;
+  let pageId = state.params.query.id;
+  if(pageId) {
+    getPageInfo(pageId);
+  }
+});
+</script>
+
+<style lang="scss">
+// 适配本地CKEditor 4样式
+:deep(.cke) {
+  height:600px !important;
+  border: 1px solid #e6e6e6;
+}
+.ck-content { height:500px; }
+</style>
