@@ -1,0 +1,271 @@
+/**
+ * Copyright (c) 广州小橘灯信息科技有限公司 2016-2017, wjun_java@163.com.
+ * <p>
+ * Licensed under the GNU Lesser General Public License (LGPL) ,Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * http://www.xjd2020.com
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.fastcms.cms.template;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.cms.entity.Article;
+import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.entity.ArticleTag;
+import com.fastcms.cms.entity.SinglePage;
+import com.fastcms.cms.service.IArticleCategoryService;
+import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.service.IArticleTagService;
+import com.fastcms.cms.service.ISinglePageService;
+import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.auth.FastcmsUserDetails;
+import com.fastcms.core.template.FastcmsStaticHtmlManager;
+import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfigurer;
+import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.RequestUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * @ignore
+ * Freemarker模板
+ * @author： wjun_java@163.com
+ * @date： 2021/2/16
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
+ */
+@Controller
+public class TemplateIndexController extends TemplateBaseController {
+
+    static final String UNDERLINE = StrUtils.UNDERLINE;
+    static final String INDEX = "index";
+    static final String DEFAULT_PAGE_VIEW = "page";
+    static final String DEFAULT_ARTICLE_VIEW = "article";
+    static final String DEFAULT_ARTICLE_LIST_VIEW = "article_list";
+
+    static final String SINGLE_PAGE_ATTR = "singlePage";
+    static final String ARTICLE_ATTR = "article";
+    static final String CATEGORY_ATTR = "category";
+    static final String ARTICLE_VO_PAGE_ATTR = "articleVoPage";
+    static final String TAG_ATTR = "tag";
+    private static final Logger log = LoggerFactory.getLogger(TemplateIndexController.class);
+
+    @Autowired
+    private IArticleService articleService;
+
+    @Autowired
+    private ISinglePageService singlePageService;
+
+    @Autowired
+    private IArticleCategoryService articleCategoryService;
+
+    @Autowired
+    private IArticleTagService articleTagService;
+
+    @Autowired
+    private RegisteredClientRepository registeredClientRepository;
+
+    // 注入 FreeMarker 配置类
+    @Autowired
+    private FastcmsTemplateFreeMarkerConfigurer config;
+
+    @RequestMapping({"/", "index"})
+    public String index() {
+        if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isEnable()) {
+            return UrlBasedViewResolver.FORWARD_URL_PREFIX.concat(getTemplate().getPath()).concat("index.html");
+        }
+        String templatePath  = getTemplatePath().concat(INDEX);
+//        // 读取 FreeMarker 模板加载根目录（从配置类里获取）
+//        String templateRootDir = config.getTemplateDirAbsolutePath().toString();
+//        // 拼接最终模板文件路径（后缀根据你的实际情况改，比如 .html 或 .ftl）
+//        String finalTemplateFile = templateRootDir +templatePath;
+//
+//        // 打印关键日志
+//        log.info("【首页接口】返回逻辑路径：{}", templatePath);
+//        log.info("【首页接口】FreeMarker 模板根目录：{}", templateRootDir);
+//        log.info("【首页接口】最终模板文件路径：{}", finalTemplateFile);
+//
+//        // 验证文件是否存在
+//        File finalFile = new File(finalTemplateFile);
+//        System.out.println(finalFile.exists());
+//        log.info("【首页接口】模板文件是否存在：{}", finalFile.exists());
+
+        return templatePath;
+    }
+
+    @RequestMapping("p/{path}")
+    public String path(@PathVariable("path") String path, Model model) {
+
+        /**
+         * 检查是否开启伪静态
+         */
+        if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isFakeStaticEnable() && path.indexOf(StrUtils.DOT) != -1) {
+            path = path.substring(0, path.indexOf(StrUtils.DOT));
+        }
+
+        SinglePage singlePage = singlePageService.getPageByPath(path);
+        if(singlePage == null) {
+            singlePage = singlePageService.getById(path);
+        }
+
+        if (singlePage == null || !SinglePage.STATUS_PUBLISH.equals(singlePage.getStatus())) {
+            return UrlBasedViewResolver.FORWARD_URL_PREFIX.concat("404");
+        }
+
+        model.addAttribute(SINGLE_PAGE_ATTR, singlePage);
+
+        String view = getTemplatePath() + DEFAULT_PAGE_VIEW;
+        if (StringUtils.isNotBlank(singlePage.getSuffix())) {
+            view = view.concat(UNDERLINE).concat(singlePage.getSuffix());
+        }
+
+        return view;
+    }
+
+    @RequestMapping("a/{id}")
+    public String article(@PathVariable("id") Long id, Model model) {
+        IArticleService.ArticleInfoVo article = articleService.getArticleDetail(id);
+
+        if (article == null || !Article.STATUS_PUBLISH.equals(article.getStatus())) {
+            return UrlBasedViewResolver.FORWARD_URL_PREFIX.concat("404");
+        }
+
+        model.addAttribute(ARTICLE_ATTR, article);
+
+        String view = getTemplatePath() + DEFAULT_ARTICLE_VIEW;
+        if(StringUtils.isNotBlank(article.getSuffix())) {
+            view = view.concat(UNDERLINE).concat(article.getSuffix());
+        }
+
+        return view;
+    }
+
+    @RequestMapping("a/c/{id}")
+    public String category(@PathVariable("id") String id,
+                           @RequestParam(name = "page", required = false, defaultValue = "1") int pageNo,
+                           @RequestParam(name = "pageSize", required = false, defaultValue = "15") int pageSize,
+                           Model model) {
+
+        if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isFakeStaticEnable() && id.indexOf(StrUtils.DOT) != -1) {
+            id = id.substring(0, id.indexOf(StrUtils.DOT));
+        }
+
+        ArticleCategory articleCategory = articleCategoryService.getById(id);
+        if(articleCategory == null) {
+            articleCategory = articleCategoryService.getOne(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getPath, id), false);
+        }
+
+        if(articleCategory != null) {
+            model.addAttribute(CATEGORY_ATTR, articleCategory);
+            QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.category_id", articleCategory.getId()).eq("a.status", Article.STATUS_PUBLISH).orderByDesc("a.created");
+            Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByCategoryId(new Page(pageNo, pageSize), queryWrapper);
+            model.addAttribute(ARTICLE_VO_PAGE_ATTR, articleVoPage);
+        }
+
+        String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;
+
+        if(articleCategory != null && StringUtils.isNotBlank(articleCategory.getSuffix())) {
+            view = view.concat(UNDERLINE).concat(articleCategory.getSuffix());
+        }
+
+        return view;
+    }
+
+    @RequestMapping("a/t/{id}")
+    public String tag(@PathVariable("id") String id,
+                           @RequestParam(name = "page", required = false, defaultValue = "1") int pageNo,
+                           @RequestParam(name = "pageSize", required = false, defaultValue = "15") int pageSize,
+                           Model model) {
+
+        ArticleTag articleTag = articleTagService.getById(id);
+
+        if(articleTag != null) {
+            model.addAttribute(TAG_ATTR, articleTag);
+            QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.tag_id", articleTag.getId()).eq("a.status", Article.STATUS_PUBLISH).orderByDesc("a.created");
+            Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByTagId(new Page(pageNo, pageSize), queryWrapper);
+            model.addAttribute(ARTICLE_VO_PAGE_ATTR, articleVoPage);
+        }
+
+        String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;
+
+        if(articleTag != null && StringUtils.isNotBlank(articleTag.getSuffix())) {
+            view = view.concat(UNDERLINE).concat(articleTag.getSuffix());
+        }
+
+        return view;
+    }
+
+    @RequestMapping("consent")
+    public String consent(@RequestParam(value = "scope") String scope,
+                          @RequestParam(value = "client_id") String clientId,
+                          @RequestParam(value = "state") String state,
+                          Model model) {
+        final String path = "consent";
+
+        SecurityContext securityContext = (SecurityContext) RequestUtils.getRequest().getSession().getAttribute("OAUTH2_SECURITY_CONTEXT");
+        FastcmsUserDetails userDetails = (FastcmsUserDetails) securityContext.getAuthentication().getPrincipal();
+        model.addAttribute("userDetails", userDetails);
+
+        RegisteredClient registeredClient = registeredClientRepository.findByClientId(clientId);
+        model.addAttribute("registeredClient", registeredClient);
+
+        String[] elements = scope.split("\\s+");
+        Set<String> requestedScopes = new HashSet<>(Arrays.asList(elements));
+
+        Set<String> scopesToAuthorize = new HashSet<>();
+        // Set<String> scopesPreviouslyAuthorized = new HashSet<>();
+        for (String req_scope : requestedScopes) {
+            if (!req_scope.equals(OidcScopes.OPENID)) { // openid scope does not require consent
+                scopesToAuthorize.add(req_scope);
+            }
+        }
+
+        model.addAttribute("scopesToAuthorize", scopesToAuthorize);
+        model.addAttribute("state", state);
+
+        String view = "consent";
+
+        SinglePage singlePage = singlePageService.getPageByPath(path);
+
+        if (singlePage != null) {
+            model.addAttribute(SINGLE_PAGE_ATTR, singlePage);
+            view = getTemplatePath() + DEFAULT_PAGE_VIEW;
+            if (StringUtils.isNotBlank(singlePage.getSuffix())) {
+                view = view.concat(UNDERLINE).concat(singlePage.getSuffix());
+            }
+        }
+
+        return view;
+    }
+
+    @GetMapping("favicon.ico")
+    @ResponseBody
+    public void returnNoFavicon() {}
+
+}

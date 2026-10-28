@@ -1,0 +1,8 @@
+<#import "_layout.html" as layout>
+<@layout.header "页面-${(singlePage.title!)}">
+    <link rel="stylesheet" href="${ctx()}/css/about.css">
+</@layout.header>
+<@layout.body>
+    ${(singlePage.contentHtml)!}
+</@layout.body>
+<@layout.script></@layout.script>
