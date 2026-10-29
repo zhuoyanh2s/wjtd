@@ -1,0 +1,84 @@
+<#import "_wjtd_layout.html" as layout>
+<@layout.head title="${(article.title)!'公司新闻'} - 万嘉通达物流">
+  <link rel="stylesheet" href="${ctx()}/css/newsdetails.css">
+  <meta name="keywords" content="${(article.seoKeywords)!}">
+  <meta name="description" content="${(article.seoDescription)!}">
+</@layout.head>
+<@layout.header pageNum="4">
+
+<section class="page-banner" style="background-image: url('${ctx()}/images/xinwen.jpg');background-size: cover;">
+  <div class="banner-content">
+    <h1>公司新闻</h1>
+    <p>COMPANY NEWS</p>
+    <div class="breadcrumb">
+      <a href="/">首页</a>
+      <span>/</span>
+      <a href="/a/c/news?pageSize=10">新闻中心</a>
+      <span>/</span>
+      <span>${(article.title)!}</span>
+    </div>
+  </div>
+</section>
+
+<section class="news-detail-section">
+  <div class="container">
+    <div class="news-detail-container">
+      <div class="news-detail-main">
+        <article class="news-article">
+          <h1 class="article-title">${(article.title)!}</h1>
+
+          <div class="article-meta">
+            <span class="meta-item"><i class="far fa-calendar"></i> 发布时间：<@formatTime value=(article.created)! format="yyyy-MM-dd"/></span>
+            <span class="meta-item"><i class="far fa-eye"></i> 浏览次数：${(article.viewCount)!0}</span>
+            <span class="meta-item"><i class="far fa-folder"></i> 分类：
+              <#if article.categoryList??>
+                <#list article.categoryList as cat>
+                  <#if cat.type == "category">${(cat.title)!}</#if>
+                </#list>
+              </#if>
+            </span>
+          </div>
+
+          <div class="article-content">
+            ${(article.contentHtml)!}
+          </div>
+
+          <div class="article-footer">
+            <a href="/a/c/news?pageSize=10" class="btn-back-list">
+              <i class="fas fa-list"></i> 返回新闻列表
+            </a>
+          </div>
+
+          <div class="article-navigation">
+            <@prevArticleTag articleId=(article.id)!>
+              <#if data??>
+                <a href="/a/${data.id}" class="nav-prev">
+                  <i class="fas fa-chevron-left"></i>
+                  <div class="nav-content">
+                    <span class="nav-label">上一篇</span>
+                    <span class="nav-title">${(data.title)!}</span>
+                  </div>
+                </a>
+              </#if>
+            </@prevArticleTag>
+
+            <@nextArticleTag articleId=(article.id)!>
+              <#if data??>
+                <a href="/a/${data.id}" class="nav-next">
+                  <div class="nav-content">
+                    <span class="nav-label">下一篇</span>
+                    <span class="nav-title">${(data.title)!}</span>
+                  </div>
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+              </#if>
+            </@nextArticleTag>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+</@layout.header>
+<@layout.footer/>

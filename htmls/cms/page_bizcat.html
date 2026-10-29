@@ -1,0 +1,82 @@
+<#import "_wjtd_layout.html" as layout>
+<#assign currentPagePath = "/p/" + (singlePage.path)!>
+<#assign banner = (singlePage.thumbnail)!>
+<#if !banner?has_content>
+  <#assign banner = ctx() + "/images/companyBg.jpg">
+</#if>
+<@layout.head title="${(singlePage.title)!'业务类型'} - 万嘉通达物流">
+  <link rel="stylesheet" href="${ctx()}/css/businessDetails.css">
+  <meta name="keywords" content="${(singlePage.seoKeywords)!}">
+  <meta name="description" content="${(singlePage.seoDescription)!}">
+</@layout.head>
+<@layout.header pageNum="2">
+
+<section class="page-banner" id="topBanner" style="background-image: url('${banner}');">
+  <div class="banner-content">
+    <h1>业务类型</h1>
+    <p>BUSINESS SERVICES</p>
+    <div class="breadcrumb">
+      <a href="/">首页</a>
+      <span>/</span>
+      <a href="/#service">业务类型</a>
+      <span>/</span>
+      <span>${(singlePage.title)!}</span>
+    </div>
+  </div>
+</section>
+
+<section class="business-detail-section">
+  <div class="container">
+    <div class="business-detail-container">
+      <div class="business-detail-main">
+        <article class="business-article">
+          <h1 class="business-title">${(singlePage.title)!}</h1>
+          <div class="business-content">
+            <div class="content-text">
+              ${(singlePage.contentHtml)!}
+            </div>
+          </div>
+          <div class="business-footer">
+            <a href="/#service" class="btn-back">
+              <i class="fas fa-arrow-left"></i> 返回业务列表
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <aside class="business-sidebar">
+        <div class="sidebar-widget">
+          <h3 class="widget-title">其他业务</h3>
+          <ul class="business-list">
+            <@layout.businessMenu; item>
+              <li>
+                <a href="${layout.menuHref(item)}" <#if layout.menuHref(item) == currentPagePath>class="active"</#if>><i class="${layout.menuIconClass(item)}" style="margin-right:8px;"></i>${(item.menuName)!}</a>
+              </li>
+            </@layout.businessMenu>
+          </ul>
+        </div>
+        <div class="sidebar-widget contact-widget">
+          <h3 class="widget-title">联系我们</h3>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-phone"></i>
+              <div class="contact-text">
+                <p>+ 86-532-68607888</p>
+                <p>+ 86-532-85836888</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <div class="contact-text">
+                <p>info@wplx.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</@layout.header>
+<@layout.footer/>

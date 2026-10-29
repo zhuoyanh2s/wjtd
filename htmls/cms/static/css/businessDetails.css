@@ -1,0 +1,333 @@
+/* 业务详情页样式 */
+
+/* 页面横幅 */
+.page-banner {
+    height: 750px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 70px;
+    background-repeat: no-repeat;background-size: cover;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* 业务详情主体 */
+.business-detail-section {
+    padding: 80px 0;
+    background: #f8f9fa;
+}
+
+.business-detail-container {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 40px;
+}
+
+/* 业务文章主体 */
+.business-detail-main {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.business-article {
+    padding: 50px;
+}
+
+/* 业务标题 */
+.business-title {
+    font-size: 32px;
+    color: var(--text-dark);
+    line-height: 1.4;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+/* 业务内容 */
+.business-content {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.content-text p {
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.highlight-text {
+    color: var(--text-dark);
+    margin-top: 25px;
+}
+
+.service-list {
+    margin: 15px 0 20px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.service-list li {
+    margin-bottom: 12px;
+    color: var(--text-light);
+    line-height: 1.8;
+    position: relative;
+    padding-left: 20px;
+}
+
+.service-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    background: var(--primary-color);
+    border-radius: 50%;
+}
+
+.keywords-label {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    line-height: 1.8;
+}
+
+/* 业务底部 */
+.business-footer {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 2px solid #e0e0e0;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(250,86,1,0.3);
+}
+
+.btn-back i {
+    font-size: 18px;
+}
+
+/* 侧边栏 */
+.business-sidebar {
+    background: transparent;
+}
+
+.sidebar-widget {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.widget-title {
+    font-size: 20px;
+    color: var(--text-dark);
+    font-weight: bold;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--primary-color);
+    position: relative;
+}
+
+.widget-title::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--primary-color);
+}
+
+/* 业务列表 */
+.business-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.business-list li {
+    margin-bottom: 12px;
+}
+
+.business-list li:last-child {
+    margin-bottom: 0;
+}
+
+.business-list a {
+    display: block;
+    padding: 12px 15px;
+    color: var(--text-light);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.business-list a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(205, 89, 33, 0.1) 0%, rgba(230, 122, 61, 0.1) 100%);
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    z-index: -1;
+}
+
+.business-list a:hover {
+    color: var(--primary-color);
+    padding-left: 25px;
+}
+
+.business-list a:hover::before {
+    width: 100%;
+}
+
+.business-list a.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.business-list a.active::before {
+    width: 100%;
+}
+
+/* 联系我们小部件 */
+.contact-widget .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-item {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.contact-item i {
+    font-size: 20px;
+    color: var(--primary-color);
+    margin-top: 3px;
+}
+
+.contact-text p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .business-detail-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .business-sidebar {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .banner-content h1 {
+        font-size: 36px;
+    }
+    
+    .banner-content p {
+        font-size: 16px;
+    }
+    
+    .breadcrumb {
+        font-size: 12px;
+    }
+    
+    .business-article {
+        padding: 30px 20px;
+    }
+    
+    .business-title {
+        font-size: 24px;
+    }
+    
+    .business-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    .business-content {
+        font-size: 15px;
+    }
+    
+    .sidebar-widget {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-banner {
+        height: 300px;
+    }
+    
+    .banner-content h1 {
+        font-size: 28px;
+    }
+    
+    .business-detail-section {
+        padding: 50px 0;
+    }
+    
+    .business-title {
+        font-size: 20px;
+    }
+    
+    .tab-btn {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+    
+    .btn-back {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+}
+

@@ -1,0 +1,281 @@
+/* 联系我们页面样式 */
+
+/* 页面横幅 */
+.page-banner {
+    height: 750px;
+    background: linear-gradient(135deg, rgba(205, 89, 33, 0.9) 0%, rgba(230, 122, 61, 0.85) 100%), 
+                url('https://images.unsplash.com/photo-1593149457046-7c19a50c5f96?w=1600') center/cover no-repeat;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 70px;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* 公共板块样式 */
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title-cn {
+    font-size: 36px;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: var(--text-light);
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.title-underline {
+    width: 60px;
+    height: 4px;
+    background: var(--primary-color);
+    margin: 20px auto 0;
+    border-radius: 2px;
+}
+
+
+.contact-info {
+    padding: 80px 0;
+    background: var(--white);
+}
+
+.contact-cards-main {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.contact-card-main {
+    background: var(--bg-light);
+    padding: 50px 30px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    text-decoration: none;
+}
+
+.contact-card-main:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(250,86,1,0.15);
+    border-color: var(--primary-color);
+    background: var(--white);
+}
+
+.contact-icon-main {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    transition: all 0.3s ease;
+}
+
+.contact-card-main:hover .contact-icon-main {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(250,86,1,0.3);
+}
+
+.contact-icon-main i {
+    font-size: 40px;
+    color: var(--white);
+}
+
+.contact-card-main h3 {
+    font-size: 22px;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.contact-card-main p {
+    font-size: 16px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    line-height: 1.8;
+}
+
+.contact-card-main p:first-of-type {
+    color: var(--primary-color);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.contact-time {
+    font-size: 14px !important;
+    color: #999 !important;
+    margin-top: 10px;
+}
+
+/* 集团分公司 */
+.branch-offices {
+    padding: 80px 0;
+    background: var(--bg-light);
+}
+
+.offices-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.office-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.office-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(250,86,1,0.15);
+}
+
+.office-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    padding: 25px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.office-header i {
+    font-size: 28px;
+    color: var(--white);
+}
+
+.office-header h3 {
+    font-size: 20px;
+    color: var(--white);
+    font-weight: bold;
+    margin: 0;
+}
+
+.office-details {
+    padding: 30px;
+}
+
+.office-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.office-item:last-child {
+    margin-bottom: 0;
+}
+
+.office-item i {
+    font-size: 16px;
+    color: var(--primary-color);
+    margin-top: 3px;
+    min-width: 16px;
+}
+
+.office-item span {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.7;
+    word-break: break-word;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .contact-cards-main {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .offices-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .banner-content h1 {
+        font-size: 36px;
+    }
+    
+    .banner-content p {
+        font-size: 16px;
+    }
+    
+    .section-title-cn {
+        font-size: 28px;
+    }
+    
+    .section-subtitle {
+        font-size: 14px;
+    }
+    
+    .offices-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-card-main {
+        padding: 40px 25px;
+    }
+    
+    .office-details {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-banner {
+        height: 300px;
+    }
+    
+    .banner-content h1 {
+        font-size: 28px;
+    }
+    
+    .contact-info,
+    .branch-offices {
+        padding: 50px 0;
+    }
+    
+    .section-header {
+        margin-bottom: 40px;
+    }
+    
+    .office-header {
+        padding: 20px 20px;
+    }
+    
+    .office-header h3 {
+        font-size: 18px;
+    }
+    
+    .office-item {
+        gap: 12px;
+    }
+    
+    .office-item span {
+        font-size: 14px;
+    }
+}
+

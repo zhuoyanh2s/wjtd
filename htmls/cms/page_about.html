@@ -1,0 +1,12 @@
+<#import "_wjtd_layout.html" as layout>
+<@layout.head title="${(singlePage.title)!'关于我们'} - 万嘉通达物流">
+  <link rel="stylesheet" href="${ctx()}/css/about.css">
+  <meta name="keywords" content="${(singlePage.seoKeywords)!}">
+  <meta name="description" content="${(singlePage.seoDescription)!}">
+</@layout.head>
+<@layout.header pageNum="5">
+
+${(singlePage.contentHtml)!}
+
+</@layout.header>
+<@layout.footer/>
