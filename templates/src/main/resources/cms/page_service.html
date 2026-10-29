@@ -1,0 +1,28 @@
+<#import "_wjtd_layout.html" as layout>
+<#assign banner = (singlePage.thumbnail)!>
+<#if !banner?has_content>
+  <#assign banner = ctx() + "/images/wj-index01.jpg">
+</#if>
+<@layout.head title="综合服务 - 万嘉通达物流">
+  <link rel="stylesheet" href="${ctx()}/css/service.css">
+  <meta name="keywords" content="${(singlePage.seoKeywords)!}">
+  <meta name="description" content="${(singlePage.seoDescription)!}">
+</@layout.head>
+<@layout.header pageNum="0">
+
+<section class="page-banner" style="background-image: url('${banner}');background-size: cover;background-position: center;">
+  <div class="banner-content">
+    <h1>万嘉通达公共服务平台</h1>
+    <p>WPLX PUBLIC SERVICE PLATFORM</p>
+    <div class="breadcrumb">
+      <a href="/">首页</a>
+      <span>/</span>
+      <span>万嘉通达公共服务平台</span>
+    </div>
+  </div>
+</section>
+
+${(singlePage.contentHtml)!}
+
+</@layout.header>
+<@layout.footer/>

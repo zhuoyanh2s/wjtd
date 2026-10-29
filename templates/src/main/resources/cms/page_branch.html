@@ -1,10 +1,30 @@
-<#import "_layout.html" as layout>
-<@layout.header "页面-${(singlePage.title!)}">
-    <link rel="stylesheet" href="${ctx()}/css/branch.css">
+<#import "_wjtd_layout.html" as layout>
+<#assign banner = (singlePage.thumbnail)!>
+<#if !banner?has_content>
+  <#assign banner = ctx() + "/images/map.jpg">
+</#if>
+<@layout.head title="${(singlePage.title)!'分支机构'} - 万嘉通达物流">
+  <link rel="stylesheet" href="${ctx()}/css/branch.css">
+  <meta name="keywords" content="${(singlePage.seoKeywords)!}">
+  <meta name="description" content="${(singlePage.seoDescription)!}">
+</@layout.head>
+<@layout.header pageNum="3">
+
+<section class="page-banner" style="background-image: url('${banner}');">
+  <div class="banner-content">
+    <h1>分支机构</h1>
+    <p>BRANCH OFFICE</p>
+    <div class="breadcrumb">
+      <a href="/">首页</a>
+      <span>/</span>
+      <a href="/p/branch_1">分支机构</a>
+      <span>/</span>
+      <span>${(singlePage.title)!}</span>
+    </div>
+  </div>
+</section>
+
+${(singlePage.contentHtml)!}
+
 </@layout.header>
-<@layout.body>
-    ${(singlePage.contentHtml)!}
-</@layout.body>
-<@layout.script>
-    <script src="${ctx()}/js/branch.js"></script>
-</@layout.script>
+<@layout.footer/>

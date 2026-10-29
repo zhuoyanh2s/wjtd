@@ -1,8 +1,14 @@
-<#import "_layout.html" as layout>
-<@layout.header "页面-${(singlePage.title!)}">
-    <link rel="stylesheet" href="${ctx()}/css/online.css">
+<#import "_wjtd_layout.html" as layout>
+<@layout.head title="${(singlePage.title)!'运价查询'} - 万嘉通达物流">
+  <link rel="stylesheet" href="${ctx()}/css/online.css">
+  <meta name="keywords" content="${(singlePage.seoKeywords)!}">
+  <meta name="description" content="${(singlePage.seoDescription)!}">
+</@layout.head>
+<@layout.header pageNum="7">
+
+${(singlePage.contentHtml)!}
+
 </@layout.header>
-<@layout.body>
-    ${(singlePage.contentHtml)!}
-</@layout.body>
-<@layout.script></@layout.script>
+<@layout.footer>
+  <script src="${ctx()}/js/online.js"></script>
+</@layout.footer>

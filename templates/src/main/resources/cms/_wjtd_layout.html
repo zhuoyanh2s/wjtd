@@ -1,0 +1,237 @@
+<#function menuHref item>
+  <#if !(item.menuUrl?has_content)>
+    <#return "#">
+  </#if>
+  <#if item.menuUrl?starts_with("http")>
+    <#return item.menuUrl>
+  </#if>
+  <#if ((item.urlType)!0) == 1>
+    <#return "/a/" + item.menuUrl>
+  </#if>
+  <#if ((item.urlType)!0) == 2>
+    <#return "/p/" + item.menuUrl>
+  </#if>
+  <#if ((item.urlType)!0) == 3>
+    <#return "/a/c/" + item.menuUrl>
+  </#if>
+  <#if ((item.urlType)!0) == 4>
+    <#return "/a/t/" + item.menuUrl>
+  </#if>
+  <#return item.menuUrl>
+</#function>
+
+<#function menuPagePath item>
+  <#if !(item.menuUrl?has_content)>
+    <#return "">
+  </#if>
+  <#if ((item.urlType)!0) == 2>
+    <#return item.menuUrl>
+  </#if>
+  <#if ((item.urlType)!0) == 0 && item.menuUrl?starts_with("/p/")>
+    <#return item.menuUrl?replace("/p/", "")>
+  </#if>
+  <#return "">
+</#function>
+
+<#function menuIconClass item>
+  <#local icon = (item.menuIcon)!>
+  <#if !(icon?has_content) || !(icon?starts_with("fa"))>
+    <#local icon = "fa fa-angle-right">
+  </#if>
+  <#return icon>
+</#function>
+
+<#macro businessMenu>
+  <@menuTag>
+    <#if data??>
+      <#list data as menu>
+        <#if menu.menuName == "业务类型" && menu.children??>
+          <#local sortedMenus = []>
+          <#list menu.children as item>
+            <#local sortedMenus = sortedMenus + [{"sortNum": ((item.sortNum)!0), "index": item_index, "item": item}]>
+          </#list>
+          <#list sortedMenus?sort_by("sortNum", "index") as row>
+            <#nested row.item>
+          </#list>
+        </#if>
+      </#list>
+    </#if>
+  </@menuTag>
+</#macro>
+
+<#macro branchMenu>
+  <@menuTag>
+    <#if data??>
+      <#list data as menu>
+        <#if menu.menuName == "分支机构" && menu.children??>
+          <#local sortedMenus = []>
+          <#list menu.children as item>
+            <#local sortedMenus = sortedMenus + [{"sortNum": ((item.sortNum)!0), "index": item_index, "item": item}]>
+          </#list>
+          <#list sortedMenus?sort_by("sortNum", "index") as row>
+            <#nested row.item>
+          </#list>
+        </#if>
+      </#list>
+    </#if>
+  </@menuTag>
+</#macro>
+
+<#macro head title="万嘉通达物流 - 通达四海 万嘉风采">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <link rel="stylesheet" href="${ctx()}/css/style.css">
+  <link rel="stylesheet" href="${ctx()}/vendor/fontawesome/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="${ctx()}/images/wjtd.ico">
+  <style>
+    .body{
+      height: 700vh;
+    }
+  </style>
+  <#nested/>
+</head>
+<body>
+</#macro>
+
+<#macro header pageNum="1">
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <a href="/">
+          <img src="${ctx()}/images/logos.png" alt="Worldplan">
+        </a>
+      </div>
+      <nav class="nav">
+        <ul>
+          <li><a href="/" <#if pageNum=="1">class="active"</#if>>首页</a></li>
+          <li><a href="/p/about" <#if pageNum=="5">class="active"</#if>>关于我们</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)" <#if pageNum=="2">class="active"</#if>>业务类型</a>
+            <ul class="dropdown-menu">
+              <@businessMenu; item>
+                <li><a href="${menuHref(item)}" target="${(item.target)!'_self'}"><i class="${menuIconClass(item)}"></i><span>${(item.menuName)!}</span></a></li>
+              </@businessMenu>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="/p/branch_1" <#if pageNum=="3">class="active"</#if>>分支机构</a>
+            <ul class="dropdown-menu dropdown-menu-wide">
+              <@branchMenu; item>
+                <li><a href="${menuHref(item)}" target="${(item.target)!'_self'}"><i class="${menuIconClass(item)}"></i><span>${(item.menuName)!}</span></a></li>
+              </@branchMenu>
+            </ul>
+          </li>
+          <li><a href="/a/c/news?pageSize=10" <#if pageNum=="4">class="active"</#if>>新闻中心</a></li>
+          <li><a href="/p/contact" <#if pageNum=="6">class="active"</#if>>联系我们</a></li>
+          <li><a href="/p/online" <#if pageNum=="7">class="active"</#if>>运价查询</a></li>
+        </ul>
+      </nav>
+      
+      <div class="lang-switcher" id="langSwitcher">
+        <span>中文/ENG</span>
+      </div>
+      <div class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </header>
+  <#nested/>
+</#macro>
+
+<#macro footer home=false>
+  <footer class="footer">
+    <div class="footer-leftView">
+      <div class="footer-lineView" style="margin-top: unset;">
+        <ul>
+          <li><a style="color: var(--primary-color);">网站导航：</a></li>
+          <li><a href="/">首  页</a></li>
+          <li><a href="/a/c/news?pageSize=10">新闻中心</a></li>
+          <li><a href="/p/about">关于我们</a></li>
+          <li><a href="/p/contact">联系我们</a></li>
+          <li><a href="/p/online">运价查询</a></li>
+        </ul>
+      </div>
+      <div class="footer-lineView">
+        <ul>
+          <li><a style="color: var(--primary-color);">业务类型：</a></li>
+          <@businessMenu; item>
+            <li><a href="${menuHref(item)}">${(item.menuName)!}</a></li>
+          </@businessMenu>
+        </ul>
+      </div>
+      <div class="footer-lineView">
+        <ul>
+          <li><a style="color: var(--primary-color);">分支机构：</a></li>
+          <li><a href="/p/branch_1">万嘉旗舰</a></li>
+          <li><a href="/p/branch_2">万嘉通商</a></li>
+          <li><a href="/p/branch_3">万嘉威海</a></li>
+          <li><a href="/p/branch_4">万嘉烟台</a></li>
+          <li><a href="/p/branch_5">万嘉大连</a></li>
+          <li><a href="/p/branch_6">万嘉连云港</a></li>
+          <li><a href="/p/branch_7">万嘉厦门</a></li>
+          <li><a href="/p/branch_8">万嘉西安</a></li>
+          <li><a href="/p/branch_9">万嘉空运</a></li>
+          <li><a href="/p/branch_10">万嘉天津</a></li>
+          <li><a href="/p/branch_11">万嘉上海</a></li>
+          <li><a href="/p/branch_12">万嘉广州</a></li>
+        </ul>
+      </div>
+      <div class="footer-lineView">
+        <ul>
+          <li><a href="/p/branch_13">万嘉石家庄</a></li>
+          <li><a href="/p/branch_14">万嘉深圳</a></li>
+          <li><a href="/p/branch_15">万嘉洛杉矶</a></li>
+          <li><a href="/p/branch_16">万嘉宁波</a></li>
+          <li><a href="/p/branch_17">万嘉北京</a></li>
+          <li><a href="/p/branch_18">万嘉滨州</a></li>
+          <li><a href="/p/branch_19">万嘉成都</a></li>
+          <li><a href="/p/branch_20">万嘉湖南</a></li>
+          <li><a href="/p/branch_21">万嘉湖北</a></li>
+          <li><a href="/p/branch_22">万嘉重庆</a></li>
+          <li><a href="/p/branch_23">万嘉芝加哥</a></li>
+          <li><a href="/p/branch_24">万嘉纽约</a></li>
+          <li><a href="/p/branch_25">万嘉台北</a></li>
+        </ul>
+      </div>
+      <div class="footer-lineView">
+        <ul>
+          <li><a href="/p/branch_26">万嘉香港</a></li>
+          <li><a href="/p/branch_27">万嘉马来西亚</a></li>
+          <li><a href="/p/branch_28">万嘉新疆</a></li>
+          <li><a href="/p/branch_29">万嘉济南</a></li>
+          <li><a href="/p/branch_30">万嘉铁必达</a></li>
+          <li><a href="/p/branch_31">万嘉多伦多</a></li>
+        </ul>
+      </div>
+      <div class="footer-leftView-longLine"></div>
+      <div class="footer-lineView">
+        <li><a style="color: var(--primary-color);">COPYRIGHT © 2026 万嘉通达物流有限公司  |  鲁ICP备20004002号</a></li>
+      </div>
+    </div>
+    <div class="footer-rightView">
+      <div class="footer-logoText">World Plan</div>
+      <div class="footer-rightView-qr">
+        <div class="qr-code">
+          <img src="${ctx()}/images/code.png" alt="微信公众号">
+          <p>微信公众号</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="back-to-top" id="backToTop">
+    <i class="fas fa-chevron-up"></i>
+  </div>
+
+  <script src="${ctx()}/js/main.js"></script>
+  <#if home>
+  <script src="${ctx()}/js/home.js"></script>
+  </#if>
+  <#nested/>
+</body>
+</html>
+</#macro>

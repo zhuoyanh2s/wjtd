@@ -1,0 +1,84 @@
+<#import "_wjtd_layout.html" as layout>
+<@layout.head title="公司新闻 - 万嘉通达物流">
+  <link rel="stylesheet" href="${ctx()}/css/newslist.css">
+  <meta name="keywords" content="公司新闻,万嘉通达,物流新闻,行业资讯">
+  <meta name="description" content="万嘉通达公司新闻与行业资讯。">
+</@layout.head>
+<@layout.header pageNum="4">
+
+<section class="page-banner" style="background-image: url('${ctx()}/images/xinwen.jpg');background-size: cover;">
+  <div class="banner-content">
+    <h1>公司新闻</h1>
+    <p>COMPANY NEWS</p>
+    <div class="breadcrumb">
+      <a href="/">首页</a>
+      <span>/</span>
+      <a href="/a/c/news?pageSize=10">新闻中心</a>
+      <span>/</span>
+      <span>公司新闻</span>
+    </div>
+  </div>
+</section>
+
+<section class="news-list-section">
+  <div class="container">
+    <div class="news-list-container">
+      <div class="news-list-main news-list-full">
+        <#if articleVoPage?? && articleVoPage.records?? && articleVoPage.records?size gt 0>
+          <#list articleVoPage.records as item>
+            <div class="news-item">
+              <div class="news-image">
+                <#if item.thumbnail?has_content>
+                  <img src="${item.thumbnail}" alt="${(item.title)!}">
+                <#else>
+                  <img src="${ctx()}/images/xinwen.jpg" alt="${(item.title)!}">
+                </#if>
+                <div class="news-date">
+                  <span class="day"><@formatTime value=(item.created)! format="dd"/></span>
+                  <span class="month"><@formatTime value=(item.created)! format="MM"/>月</span>
+                </div>
+              </div>
+              <div class="news-content">
+                <h3><a href="/a/${item.id}">${(item.title)!}</a></h3>
+                <p class="news-excerpt">${(item.summary)!}</p>
+                <div class="news-meta">
+                  <span><i class="far fa-calendar"></i> <@formatTime value=(item.created)! format="yyyy-MM-dd"/></span>
+                  <a href="/a/${item.id}" class="read-more">查看更多 <i class="fas fa-arrow-right"></i></a>
+                </div>
+              </div>
+            </div>
+          </#list>
+        <#else>
+          <div class="news-item">
+            <div class="news-content">
+              <h3>暂无新闻</h3>
+            </div>
+          </div>
+        </#if>
+
+        <@articlePageTag>
+          <#if data?? && data.list?? && data.list?size gt 0>
+            <div class="pagination">
+              <#if data.prev?? && data.prev.url?has_content>
+                <a href="${data.prev.url}" class="page-link"><i class="fas fa-chevron-left"></i> 上一页</a>
+              </#if>
+              <#list data.list as page>
+                <#if data.current?string == page.text>
+                  <a href="javascript:void(0)" class="page-link active">${page.text}</a>
+                <#else>
+                  <a href="${page.url!}" class="page-link">${page.text}</a>
+                </#if>
+              </#list>
+              <#if data.next?? && data.next.url?has_content>
+                <a href="${data.next.url}" class="page-link">下一页 <i class="fas fa-chevron-right"></i></a>
+              </#if>
+            </div>
+          </#if>
+        </@articlePageTag>
+      </div>
+    </div>
+  </div>
+</section>
+
+</@layout.header>
+<@layout.footer/>
