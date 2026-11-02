@@ -612,7 +612,7 @@ customElements.define('site-nav', class extends HTMLElement {
             <div class="container">
             <div class="logo">
                 <a href="index.html">
-                <img src="images/logos.png" alt="Worldplan">
+                <img src="/attachment/20260203/9ecff4ca8ffa42d39b6067a1ea9b6265.png" alt="Worldplan">
                 </a>
             </div>
             <nav class="nav">
@@ -770,7 +770,7 @@ customElements.define('site-footer', class extends HTMLElement {
       <div class="footer-logoText">World Plan</div>
       <div class="footer-rightView-qr">
         <div class="qr-code">
-          <img src="images/code.png" alt="微信公众号">
+          <img src="/attachment/20260203/e05c14f5ee3441119d618daa8ecde587.png" alt="微信公众号">
           <p>微信公众号</p>
         </div>
       </div>

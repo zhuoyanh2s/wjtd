@@ -2,7 +2,7 @@
 <#assign currentPagePath = "/p/" + (singlePage.path)!>
 <#assign banner = (singlePage.thumbnail)!>
 <#if !banner?has_content>
-  <#assign banner = ctx() + "/images/companyBg.jpg">
+  <#assign banner = "/attachment/20261102/910b3985a0ac457ab6b6ced122753b78.jpg">
 </#if>
 <@layout.head title="${(singlePage.title)!'业务类型'} - 万嘉通达物流">
   <link rel="stylesheet" href="${ctx()}/css/businessDetails.css">
