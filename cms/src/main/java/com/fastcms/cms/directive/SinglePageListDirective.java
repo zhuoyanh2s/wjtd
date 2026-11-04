@@ -16,7 +16,10 @@
  */
 package com.fastcms.cms.directive;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.cms.service.ISinglePageService;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.utils.CollectionUtils;
 import freemarker.core.Environment;
@@ -46,6 +49,20 @@ public class SinglePageListDirective extends BaseDirective {
 
 	@Override
 	public Object doExecute(Environment env, Map params) throws TemplateModelException {
+
+		final String suffix = getStr("suffix", params);
+
+		if (StrUtils.isNotBlank(suffix)) {
+			final Integer count = getInt(PARAM_COUNT, params, 0);
+
+			QueryWrapper<SinglePage> wrapper = new QueryWrapper<SinglePage>();
+			wrapper.eq("suffix", suffix);
+			wrapper.eq("status", SinglePage.STATUS_PUBLISH);
+			wrapper.orderByAsc("id");
+			wrapper.last(count > 0, "limit 0," + count);
+
+			return singlePageService.list(wrapper);
+		}
 
 		final String pageIdParams = getStr(IDS, params);
 

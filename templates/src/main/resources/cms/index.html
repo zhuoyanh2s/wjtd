@@ -117,87 +117,37 @@
         <h2 class="section-title-en">SERVICE</h2>
       </div>
 
+      <#assign bizPages = {}>
+      <@singlePageList suffix="bizcat">
+        <#if data??>
+          <#list data as p>
+            <#assign bizPages = bizPages + {p.path: p}>
+          </#list>
+        </#if>
+      </@singlePageList>
+
       <div class="services-items" style="margin-top: 40px;">
-        <a href="/p/bizcat_1" style="text-decoration: none;" class="service-item service-left">
-          <div class="service-card">
-            <i class="fas fa-ship"></i>
-            <h4>海运进出口</h4>
-            <p>提供全球主要港口的海运整柜、拼箱服务，与多家知名船公司建立战略合作关系，确保舱位充足、价格优惠。我们的海运服务覆盖全球200多个港口，能够满足不同客户的运输需求。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
-        <a href="/p/bizcat_2" style="text-decoration: none;" class="service-item service-left">
-          <div class="service-card">
-            <i class="fas fa-random"></i>
-            <h4>多式联运</h4>
-            <p>整合海运、陆运、铁路等多种运输方式，提供灵活高效的一体化物流解决方案。通过科学的运输组织和路线优化，为客户降低成本、提升效率，实现全程无缝衔接。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
-        <a href="/p/bizcat_3" style="text-decoration: none;" class="service-item service-left">
-          <div class="service-card">
-            <i class="fas fa-shopping-cart"></i>
-            <h4>跨境电商</h4>
-            <p>专注于跨境电商物流服务，提供包括海外仓储、国际运输、清关配送等一站式解决方案。支持小包直邮、FBA头程等多种模式，助力电商客户快速拓展全球市场。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
-        <a href="/p/bizcat_4" style="text-decoration: none;" class="service-item service-left">
-          <div class="service-card">
-            <i class="fas fa-truck"></i>
-            <h4>陆运业务</h4>
-            <p>提供国内外公路运输服务，覆盖整车、零担、危险品等多种货物类型。拥有专业的车队和经验丰富的驾驶员团队，确保货物安全准时送达。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
-        <a href="/p/bizcat_5" style="text-decoration: none;" class="service-item service-left">
-          <div class="service-card">
-            <i class="fas fa-project-diagram"></i>
-            <h4>供应链管理</h4>
-            <p>提供端到端的供应链管理服务，包括采购、仓储、配送、库存管理等全流程解决方案。通过数字化系统实现供应链可视化，帮助客户优化运营、降低成本。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
-        <a href="/p/bizcat_6" style="text-decoration: none;" class="service-item service-right">
-          <div class="service-card">
-            <i class="fas fa-plane-departure"></i>
-            <h4>海空联运</h4>
-            <p>结合海运的经济性和空运的快捷性，为客户提供灵活的运输方案。特别适合对时效有一定要求但预算有限的货物，实现成本与效率的最佳平衡。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>        
-        </a>
-        <a href="/p/bizcat_7" style="text-decoration: none;" class="service-item service-right">
-          <div class="service-card">
-            <i class="fas fa-warehouse"></i>
-            <h4>综合物流保税</h4>
-            <p>提供保税仓储、保税物流、保税加工等一体化保税服务。依托保税区政策优势，为客户提供灵活的进出口解决方案，有效降低资金占用和运营成本。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
-        <a href="/p/bizcat_8" style="text-decoration: none;" class="service-item service-right">
-          <div class="service-card">
-            <i class="fas fa-globe"></i>
-            <h4>国际中转集拼</h4>
-            <p>提供专业的国际货物中转集拼服务，通过科学的货物整合和路线规划，帮助客户降低运输成本。拥有丰富的操作经验和完善的服务网络。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
-        <a href="/p/bizcat_9" style="text-decoration: none;" class="service-item service-right">
-          <div class="service-card">
-            <i class="fas fa-file-signature"></i>
-            <h4>报关报检</h4>
-            <p>提供专业的进出口报关报检服务，熟悉各类商品的报关流程和政策法规。拥有经验丰富的报关团队，确保货物快速通关，降低客户的时间成本和风险。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
-        <a href="/p/bizcat_10" style="text-decoration: none;" class="service-item service-right">
-          <div class="service-card">
-            <i class="fas fa-boxes"></i>
-            <h4>拼箱场站</h4>
-            <p>拥有专业的拼箱场站设施和操作团队，提供拼箱货物的装卸、分拣、仓储等服务。通过标准化操作流程，确保货物安全高效地完成拼装和分拨。</p>
-            <i class="fas fa-long-arrow-right"></i>
-          </div>
-        </a>
+        <#assign cardIndex = 0>
+        <@layout.businessMenu; item>
+          <#if cardIndex lt 10>
+            <#assign pagePath = (item.menuUrl!'')?replace('/p/','')>
+            <#assign p = bizPages[pagePath]!{}>
+            <#if cardIndex lt 5>
+              <#assign sideClass = "service-left">
+            <#else>
+              <#assign sideClass = "service-right">
+            </#if>
+            <a href="${layout.menuHref(item)}" target="${(item.target)!'_self'}" class="service-item ${sideClass}" style="text-decoration: none;">
+              <div class="service-card">
+                <i class="${layout.menuIconClass(item)}"></i>
+                <h4>${(item.menuName)!p.title}</h4>
+                <p>${(p.summary)!''}</p>
+                <i class="fas fa-long-arrow-right"></i>
+              </div>
+            </a>
+            <#assign cardIndex = cardIndex + 1>
+          </#if>
+        </@layout.businessMenu>
       </div>
     </div>
   </section>
