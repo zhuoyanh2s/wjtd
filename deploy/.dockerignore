@@ -1,3 +1,5 @@
+config/
+htmls/
 data/
 logs/
 *.log
