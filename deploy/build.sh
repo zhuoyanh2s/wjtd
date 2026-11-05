@@ -16,7 +16,7 @@ esac
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DEPLOY="$ROOT/deploy"
-IMAGE="${REGISTRY:+$REGISTRY/}wjtd-website:$VERSION"
+IMAGE="${REGISTRY:+$REGISTRY/}wjtd-ow:$VERSION"
 
 SKIP_MAVEN=0
 PUSH=0
